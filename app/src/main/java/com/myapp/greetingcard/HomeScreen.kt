@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -21,6 +22,9 @@ fun HomeScreen(
     navigator: NavHostController,
     changeMessage: (String) -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        changeMessage("Please, select an option.")
+    }
 
     Column(
         modifier = Modifier

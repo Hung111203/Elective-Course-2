@@ -1,5 +1,5 @@
 package com.myapp.greetingcard
-import Navigator
+import com.myapp.greetingcard.Navigator
 import androidx.compose.ui.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     AnNamDatabase::class.java, "An Nam database"
                 ).build()
                 val flashCardDao = db.flashCardDao()
+                //flashCardDao.insertAll(FlashCard(uid = 0, englishCard = "test1", vietnameseCard = "test2"))
                 //testing
                 runBlocking {
 
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
                 }
                 //Navigator()
-                Navigator(navController)
+                Navigator(navController, flashCardDao)
             }
         }
     }

@@ -1,23 +1,87 @@
 package com.myapp.greetingcard
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchCardsScreen(
-    navigator: NavHostController
+fun FlashCardList(
+    selectedItem: (FlashCard) -> Unit,
+
+    flashCards: List<FlashCard>
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    LazyColumn(
+        modifier = Modifier.padding(16.dp)
     ) {
-        Text(text = "still working on it")
+        items(
+            items = flashCards,
+            key = { flashCard ->
+                flashCard.uid
+            }
+        ) { flashCard ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(width = 1.dp, color = Color.LightGray)
+                    .padding(6.dp)
+                    .clickable(onClick = {
+                        selectedItem(flashCard)
+                    }
+                    )
+            ) {
+                Column(modifier = Modifier.padding(6.dp))
+                { Text(flashCard.englishCard.toString()) }
+                Column(modifier = Modifier.padding(6.dp)) { Text(" = ") }
+                Column(modifier = Modifier.padding(6.dp))
+                { Text(flashCard.vietnameseCard.toString()) }
+            }
+        }
     }
 }
 
 
+@Composable
+fun SearchCardsScreen(
+
+    selectedItem: (FlashCard) -> Unit,
+    getAllFlashCards: suspend () -> List<FlashCard>
+
+) {
+    var flashCards  by remember { mutableStateOf(emptyList<FlashCard>()) }
+
+    LaunchedEffect(Unit) {
+        flashCards = getAllFlashCards()
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Spacer(
+            modifier = Modifier.size(16.dp)
+        )
+        FlashCardList(
+            flashCards = flashCards,
+            selectedItem = selectedItem
+        )
+    }
+}

@@ -14,6 +14,7 @@ materialIconsExtended = "1.6.8"
 navigationTesting = "2.9.5"
 roomVersion = "2.8.3"
 robolectric = "4.16"
+core = "1.5.0"
 
 
 
@@ -44,6 +45,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 
 [plugins]
