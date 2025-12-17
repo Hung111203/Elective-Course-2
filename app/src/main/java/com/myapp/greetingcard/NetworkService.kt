@@ -3,10 +3,17 @@ package com.myapp.greetingcard
 import retrofit2.http.Body
 import retrofit2.http.PUT
 import retrofit2.http.Url
+/**
+ * Represents the JSON response from the token generation API. * e.g., {"code": 200, "message": "Email sent successfully."}
+ */
+data class ApiResponse(
+    val code: Int,
+    val message: String
+)
 
 interface NetworkService {
     @PUT
     suspend fun generateToken(
-        @Url url: String = "https://dmzrueciplycef2h5r7ipqbf4y0hhpse.lambda-url.ap-southeast-1.on.aws/",
-        @Body email: UserCredential): UserToken
+        @Url url: String = "https://egsbwqh7kildllpkijk6nt4soq0wlgpe.lambda-url.ap-southeast-1.on.aws/",
+        @Body email: UserCredential): ApiResponse
 }

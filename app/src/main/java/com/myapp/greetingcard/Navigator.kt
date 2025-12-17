@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
+import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +59,13 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
     val getLesson: suspend (Int) -> List<FlashCard> = { size ->
         flashCardDao.getLesson(size)
     }
+    val navigateToHome = fun(){
+        navController.navigate("home")
+    }
+    val navigateToToken = fun(email:String){
+        navController.navigate(TokenRoute(email))
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -165,10 +173,24 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                     updateCard = updateCard // <-- ADD THIS LINE
                 )
             }
-            composable(route = "login_page") {
+            composable <LoginRoute>{
+                backStackEntry ->
+                val loginRoute : LoginRoute = backStackEntry.toRoute()
                 LoginPage(
-                    networkService= networkService
+                    networkService= networkService,
+                    changeMessage = changeMessage,
+                    navigateToToken = navigateToToken
                 )
+            }
+            composable <TokenRoute>{
+                backStackEntry ->
+                val tokenRoute : TokenRoute = backStackEntry.toRoute()
+                TokenScreen(
+                    changeMessage = changeMessage,
+                    navigateToHome = navigateToHome,
+                    email = tokenRoute.email
+                )
+
             }
 
 
