@@ -31,6 +31,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import kotlinx.coroutines.runBlocking
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +54,14 @@ class MainActivity : ComponentActivity() {
                     Log.d("AnNam",flashCard.toString() )
 
                 }
+                val retrofit: Retrofit = Retrofit.Builder()
+                    .baseUrl("https://placeholder.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                val networkService = retrofit.create(NetworkService::class.java)
                 //Navigator()
-                Navigator(navController, flashCardDao)
+                Navigator(navController, networkService, flashCardDao)
             }
         }
     }

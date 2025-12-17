@@ -28,10 +28,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.toRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigator(navController: NavHostController,flashCardDao: FlashCardDao) {
+fun Navigator(navController: NavHostController,networkService: NetworkService,flashCardDao: FlashCardDao) {
 
     var message by rememberSaveable { mutableStateOf("Welcome") }
     val insertFlashCard: suspend (FlashCard) -> Unit ={
@@ -45,7 +46,18 @@ fun Navigator(navController: NavHostController,flashCardDao: FlashCardDao) {
     val getAllFlashCards: suspend () -> List<FlashCard> = {
         flashCardDao.getAll()
     }
-
+    val getCardById: suspend (Int) -> FlashCard? = { id ->
+        flashCardDao.getCardById(id)
+    }
+    val deleteCardById: suspend (Int) -> Unit = { id ->
+        flashCardDao.deleteById(id)
+    }
+    val updateCard: suspend (FlashCard) -> Unit = { flashCard ->
+        flashCardDao.updateCard(flashCard)
+    }
+    val getLesson: suspend (Int) -> List<FlashCard> = { size ->
+        flashCardDao.getLesson(size)
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -119,15 +131,47 @@ fun Navigator(navController: NavHostController,flashCardDao: FlashCardDao) {
             }
             // STUDY CARDS
             composable(route = "study_cards") {
-                StudyCardsScreen(navigator = navController)
+                StudyCardsScreen(navigator = navController,
+                    getLesson = getLesson)
             }
             // SEARCH CARDS
             composable(route = "search_cards") {
                 SearchCardsScreen(
-                   // flashCards = emptyList(),
                     getAllFlashCards = getAllFlashCards,
-                    selectedItem ={})
+                    // When an item is selected, navigate using the type-safe ShowCard object
+                    selectedItem = { flashCard ->
+                        navController.navigate(ShowCard(cardId = flashCard.uid))
+                                   },
+                    deleteCardById = deleteCardById,
+                    onDeletedClicked = { flashCard ->
+                        // This is for clicking the row to see details
+                        navController.navigate(ShowCard(cardId = flashCard.uid))
+                    },
+                        onEditSelected = { flashCard ->
+                            navController.navigate(ShowCard(cardId = flashCard.uid))
+                        }
+                    )
             }
+            composable<ShowCard> { backStackEntry ->
+                // This automatically gets the arguments from the navigation action.
+                val args: ShowCard = backStackEntry.toRoute()
+                ShowCardScreen(
+                    args = args,
+                    getCardById = getCardById,
+                    deleteCardById = {
+                        deleteCardById(it)
+                        navController.popBackStack()
+                    },
+                    updateCard = updateCard // <-- ADD THIS LINE
+                )
+            }
+            composable(route = "login_page") {
+                LoginPage(
+                    networkService= networkService
+                )
+            }
+
+
         }
     }
 }

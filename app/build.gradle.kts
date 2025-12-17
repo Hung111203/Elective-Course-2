@@ -10,6 +10,10 @@ plugins {
 
     id("com.google.devtools.ksp")
 
+    id("org.jetbrains.kotlin.plugin.serialization")
+
+
+
 }
 
 android {
@@ -117,5 +121,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.9.3")
 // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.9.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0") // Or the latest version
+    implementation("androidx.navigation:navigation-compose:2.8.0-alpha08") // Or a later version
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
 // Test rules and transitive dependencies:

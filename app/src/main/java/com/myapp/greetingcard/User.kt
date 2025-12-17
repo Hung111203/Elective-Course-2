@@ -7,7 +7,7 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
-
+import androidx.room.Update
 @Entity
 data class User(
     @PrimaryKey val uid: Int,
@@ -30,5 +30,16 @@ interface FlashCardDao {
     suspend fun insertAll(vararg flashCard: FlashCard)
 
     @Delete
-    fun delete(flashCard: FlashCard)
+    suspend fun delete(flashCard: FlashCard)
+
+    @Query("SELECT * FROM FlashCards WHERE uid = :id")
+    suspend fun getCardById(id: Int): FlashCard?
+
+    @Query("DELETE FROM FlashCards WHERE uid = :id")
+    suspend fun deleteById(id: Int)
+    @Update
+    suspend fun updateCard(flashCard: FlashCard)
+
+    @Query("SELECT * FROM FlashCards ORDER BY RANDOM() LIMIT :size")
+    suspend fun getLesson(size: Int): List<FlashCard>
 }

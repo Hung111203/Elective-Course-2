@@ -50,7 +50,13 @@ fun HomeScreen(
 
         Button(onClick = {
             navigator.navigate("search_cards") }) { Text("Search Card") }
+        Spacer(Modifier.height(16.dp))
+
+        Button(onClick = {
+            navigator.navigate("login_page") }) { Text("Login") }
     }
+
+
 
 }
 
