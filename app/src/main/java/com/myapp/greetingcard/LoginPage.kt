@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -35,8 +36,8 @@ fun LoginPage(
 ) {
     val scope = rememberCoroutineScope()
     var email by remember { mutableStateOf("") }
-    val token by remember { mutableStateOf("") }
-    var code by remember { mutableStateOf(0) }
+//    val token by remember { mutableStateOf("") }
+//    var code by remember { mutableStateOf(0) }
     LaunchedEffect(key1 = Unit) {
         changeMessage("Enter your email to receive a login token")
     }
@@ -74,7 +75,8 @@ fun LoginPage(
 
                         // 2. Check the result after the call is complete.
                         if (result.code == 200) {
-                            changeMessage(result.message)
+                            changeMessage(result.message + " Navigating to token screen...")
+                            delay(2000)
                             navigateToToken(email) // Navigate on success.
                         } else {
                             changeMessage("Error: ${result.message}")

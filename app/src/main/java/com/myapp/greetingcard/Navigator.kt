@@ -140,7 +140,11 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
             // STUDY CARDS
             composable(route = "study_cards") {
                 StudyCardsScreen(navigator = navController,
-                    getLesson = getLesson)
+                    getLesson = getLesson,
+                    networkService= networkService,
+                    changeMessage = changeMessage
+                    )
+
             }
             // SEARCH CARDS
             composable(route = "search_cards") {

@@ -19,10 +19,7 @@ data class User(
     @ColumnInfo(name = "last_name") val lastName: String?
 )
 
-@Entity(tableName = "FlashCards", indices = [Index(
-    value = ["english_card", "vietnamese_card"],
-    unique = true
-)])
+
 
 @Dao
 interface FlashCardDao {

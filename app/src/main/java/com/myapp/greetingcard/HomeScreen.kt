@@ -39,7 +39,7 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         val preferencesFlow: Flow<Preferences> = appContext.dataStore.data
         val preferences = preferencesFlow.first()
-        changeMessage(preferences[EMAIL] ?: "")
+        changeMessage(preferences[EMAIL] ?: "Welcome back!")
     }
 
     Column(

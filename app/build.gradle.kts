@@ -94,6 +94,9 @@ configurations {
 
 dependencies {
 
+    implementation(libs.androidx.media3.exoplayer)
+
+
     implementation(libs.androidx.material.icons.extended) // Add this line
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
