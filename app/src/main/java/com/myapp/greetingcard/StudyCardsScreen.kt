@@ -75,7 +75,6 @@ fun hashStringSHA256(input: String): String {
 
 @Composable
 fun StudyCardsScreen(
-    navigator: NavHostController,
     getLesson: suspend (Int) -> List<FlashCard>,
     networkService: NetworkService,
     changeMessage: (String) -> Unit

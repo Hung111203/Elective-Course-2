@@ -1,7 +1,6 @@
 package com.myapp.greetingcard
 
 
-import androidx.activity.result.launch
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
@@ -12,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,51 +24,44 @@ import kotlinx.coroutines.launch
 fun ShowCardScreen(
     args: ShowCard,
     getCardById: suspend (Int) -> FlashCard?,
-    deleteCardById: suspend (Int) -> Unit,
     updateCard: suspend (FlashCard) -> Unit,
+    changeMessage: (String) -> Unit
 ) {
-    var enWord by remember { mutableStateOf("") }
-    var vnWord by remember { mutableStateOf("") }
-    var cardFound by remember { mutableStateOf(false) } // State to track if card was found
-    var isLoading by remember { mutableStateOf(true) }
+    var enWord by rememberSaveable { mutableStateOf("") }
+    var vnWord by rememberSaveable { mutableStateOf("") }
+    var cardFound by rememberSaveable { mutableStateOf(false) } // State to track if card was found
+    var isLoading by rememberSaveable { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
 
 
-    // Fetches the card data and populates the text fields
     LaunchedEffect(args.cardId) {
         isLoading = true
         val card = getCardById(args.cardId)
         if (card != null) {
             enWord = card.englishCard ?: ""
             vnWord = card.vietnameseCard ?: ""
-            cardFound = true // Mark that the card was successfully found
+            cardFound = true // Mark successfully found
         } else {
             cardFound = false
         }
         isLoading = false
     }
 
-    // --- Main Layout Column, styled like AddCardScreen ---
     Column() {
         if (isLoading) {
-            // Show a loading spinner while fetching the card
             CircularProgressIndicator()
         } else if (cardFound) {
 
-
-                // --- English Text Field  ---
-                TextField(
+             TextField(
                         value = enWord,
-                        onValueChange = { enWord = it }, // Link to state variable
+                        onValueChange = { enWord = it },
                         modifier = Modifier
                             .fillMaxWidth()
                             .semantics { contentDescription = "English String" },
                         label = { Text(stringResource(id = R.string.English_label)) }
                     )
 
-
-                // --- Vietnamese Text Field ---
-                TextField(
+             TextField(
                     value = vnWord,
                     onValueChange = { vnWord = it }, // Link to state variable
                     modifier = Modifier
@@ -88,6 +80,7 @@ fun ShowCardScreen(
                                 vietnameseCard = vnWord
                             )
                             updateCard(updatedFlashCard)
+                            changeMessage("Card updated successfully.");
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -96,7 +89,6 @@ fun ShowCardScreen(
                 }
 
             } else {
-                // Show a message if the card couldn't be found
                 Text("Card not found.")
             }
         }

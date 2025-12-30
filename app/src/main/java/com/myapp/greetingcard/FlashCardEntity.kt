@@ -5,7 +5,8 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "FlashCards",
+@Entity
+    (tableName = "FlashCards",
     indices = [Index(value = ["english_card","vietnamese_card"],
     unique = true)])
 data class FlashCard(

@@ -1,166 +1,175 @@
 package com.myapp.greetingcard
 
-import Navigator
-import android.os.LocaleList
-import androidx.compose.ui.test.DeviceConfigurationOverride
-import androidx.compose.ui.test.Locales
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.testing.TestNavHostController
+import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertEquals
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
-
-import org.junit.Test
-import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 import org.junit.Rule
+import org.junit.Test
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-
-
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 
 class MyComposeTest {
-
+    //This creates a shell activity that doesn't have any pre-set content, allowing your tests to call setContent() to set up the UI for the test.
     @get:Rule
     val composeTestRule = createComposeRule()
-    // use createAndroidComposeRule<YourActivity>() if you need access to
-    // an activity
-
-    @Test
-    fun myTest() {
-        // Start the app
-//        composeTestRule.setContent {
-//            //MyAppTheme {
-//                Navigator()
-//            //}
-//        }
-
-        composeTestRule.onNodeWithText("An Nam").assertIsDisplayed()
-
-    }
-
-    @Test
-    fun backButtonAddCard() {
-        // Start the app
-//        composeTestRule.setContent {
-//            //MyAppTheme {
-//            Navigator()
-//            //}
-//        }
-
-        composeTestRule.onNodeWithText("Add Card").performClick()
-        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
-
-
-    }
-
-    @Test
-    fun goBackTest() {
-//        composeTestRule.setContent {
-//            Navigator()
-//        }
-        composeTestRule.onNodeWithText("Add Card").performClick()
-        composeTestRule.onNodeWithText("Back").assertExists().performClick()
-        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
-
-    }
 
     @Test
     fun homeStartDestination() {
-        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
-        navController.navigatorProvider.addNavigator(ComposeNavigator())
-        composeTestRule.setContent {
-            Navigator(navController)
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val navController = TestNavHostController(context)
 
+        val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
+            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .build()
+        val flashCardDao = db.flashCardDao()
+
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://placeholder.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val networkService = retrofit.create(NetworkService::class.java)
+
+        navController.navigatorProvider.addNavigator(ComposeNavigator())
+
+
+        composeTestRule.setContent {
+            Navigator(
+                navController,
+                networkService,
+                flashCardDao
+            )
+        }
+        assertEquals("home", navController.currentDestination?.route)
+    }
+
+    @Test
+    fun clickBackButtonAddCard(){
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val navController = TestNavHostController(context)
+
+        val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
+            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .build()
+        val flashCardDao = db.flashCardDao()
+
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://placeholder.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val networkService = retrofit.create(NetworkService::class.java)
+
+        navController.navigatorProvider.addNavigator(ComposeNavigator())
+        // Set UI
+        composeTestRule.setContent {
+            Navigator(
+                navController,
+                networkService,
+                flashCardDao
+            )
 
         }
+        composeTestRule.onNodeWithText("Add Card").performClick()
+        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Back").assertExists().performClick()
 
-        assertEquals("home", navController.currentDestination?.route)
 
     }
 
     @Test
     fun homeScreen_whenStudyCardButtonClicked_navigatesToStudyCardScreen() {
-        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val navController = TestNavHostController(context)
+
+        val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
+            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .build()
+        val flashCardDao = db.flashCardDao()
+
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://placeholder.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val networkService = retrofit.create(NetworkService::class.java)
+
         navController.navigatorProvider.addNavigator(ComposeNavigator())
+
         composeTestRule.setContent {
-            // Use the test controller you created
-            Navigator(navController)
+            Navigator(navController, networkService, flashCardDao)
         }
-        composeTestRule.runOnUiThread {
-            navController.navigate("home")
-
-        }
-
-        composeTestRule
-            .onNodeWithContentDescription("navigateToStusyCard")
-            .assertTextEquals("Study Cards")
-            .performClick()
-
-        // 3. ASSERT: Check that the current route is now the study card screen
+        composeTestRule.onNodeWithText("Study Cards").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("Study Cards").performClick()
         assertEquals("study_cards", navController.currentDestination?.route)
 
-
     }
-
     @Test
-    fun displayMessage() {
-        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+    fun changeMessage(){
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val navController = TestNavHostController(context)
+
+        val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
+            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .build()
+        val flashCardDao = db.flashCardDao()
+
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://placeholder.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val networkService = retrofit.create(NetworkService::class.java)
+
         navController.navigatorProvider.addNavigator(ComposeNavigator())
         composeTestRule.setContent {
-
-            Navigator(navController)
+            Navigator(navController,networkService,flashCardDao)
         }
-        // Navigate to the Add Card-screen
         composeTestRule.runOnUiThread {
             navController.navigate("add_card")
-
         }
-        composeTestRule.onNodeWithContentDescription("Message")
+        composeTestRule.onNodeWithContentDescription("Message") //called in nav
             .assertExists()
-            .assert(hasText("Welcome"))
+            .assert(hasText("Please, add a flash card."))
 
     }
-//    @Test
-//    fun viDisplayEmptyEnglish() {
-//        composeTestRule.setContent {
-//            DeviceConfigurationOverride(
-//                DeviceConfigurationOverride.Locales(LocaleList("vi"))
-//            ) {
-//                AddCardScreen()
-//            }
-//        }
-//
-//        composeTestRule.onNodeWithContentDescription("EnTextInput")
-//            .assertTextEquals("Tiếng Anh", "")
-//    }
+    //In the Home screen, a button should exist with the text "Add Card"
+    @Test
+    fun homeScreen_addCardButtonExist(){
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val navController = TestNavHostController(context)
+
+        val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
+            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .build()
+        val flashCardDao = db.flashCardDao()
+
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://placeholder.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val networkService = retrofit.create(NetworkService::class.java)
+
+        navController.navigatorProvider.addNavigator(ComposeNavigator())
+        composeTestRule.setContent {
+            Navigator(navController,networkService,flashCardDao)
+        }
+        composeTestRule.onNodeWithText("Add Card").assertExists().assertIsDisplayed()
+
+
+
+    }
+
 }
-//    @Test
-//    fun homeScreenTest(){
-//        composeTestRule.setContent {
-//            Navigator()
-//        }
-//        HomeScreen(
-//            innerPadding = 12.dp,
-//            navigator: NavHostController
-//        )
-//    }
 

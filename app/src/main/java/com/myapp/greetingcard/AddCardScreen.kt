@@ -21,8 +21,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 
-fun AddCardScreen(navigator: NavHostController,
-                  changeMessage: (String) -> Unit,
+fun AddCardScreen(changeMessage: (String) -> Unit,
                   insertFlashCard: suspend (FlashCard) -> Unit) {
 
     var enWord by rememberSaveable { mutableStateOf("") }

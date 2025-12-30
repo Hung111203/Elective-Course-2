@@ -72,6 +72,7 @@ fun HomeScreen(
         Button(onClick = {
             navigator.navigate(LoginRoute)
         }) { Text("Login") }
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()

@@ -29,17 +29,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
-import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigator(navController: NavHostController,networkService: NetworkService,flashCardDao: FlashCardDao) {
 
     var message by rememberSaveable { mutableStateOf("Welcome") }
+
     val insertFlashCard: suspend (FlashCard) -> Unit ={
         flashCard ->flashCardDao.insertAll(flashCard)
-        //suspend,coroutine func
-
+        //suspend func
     }
     val changeMessage = fun(text:String){
         message = text
@@ -70,7 +69,6 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                // FIX: Used TopAppBarDefaults.topAppBarColors for clarity and correctness
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -132,14 +130,13 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
             // ADD CARD
             composable(route = "add_card") {
                 AddCardScreen(
-                    navigator = navController,
                     changeMessage = { message = it },
                     insertFlashCard = insertFlashCard
                 )
             }
             // STUDY CARDS
             composable(route = "study_cards") {
-                StudyCardsScreen(navigator = navController,
+                StudyCardsScreen(
                     getLesson = getLesson,
                     networkService= networkService,
                     changeMessage = changeMessage
@@ -150,16 +147,8 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
             composable(route = "search_cards") {
                 SearchCardsScreen(
                     getAllFlashCards = getAllFlashCards,
-                    // When an item is selected, navigate using the type-safe ShowCard object
-                    selectedItem = { flashCard ->
-                        navController.navigate(ShowCard(cardId = flashCard.uid))
-                                   },
                     deleteCardById = deleteCardById,
-                    onDeletedClicked = { flashCard ->
-                        // This is for clicking the row to see details
-                        navController.navigate(ShowCard(cardId = flashCard.uid))
-                    },
-                        onEditSelected = { flashCard ->
+                    onEditSelected = { flashCard ->
                             navController.navigate(ShowCard(cardId = flashCard.uid))
                         }
                     )
@@ -170,11 +159,8 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                 ShowCardScreen(
                     args = args,
                     getCardById = getCardById,
-                    deleteCardById = {
-                        deleteCardById(it)
-                        navController.popBackStack()
-                    },
-                    updateCard = updateCard // <-- ADD THIS LINE
+                    updateCard = updateCard,
+                    changeMessage = changeMessage
                 )
             }
             composable <LoginRoute>{

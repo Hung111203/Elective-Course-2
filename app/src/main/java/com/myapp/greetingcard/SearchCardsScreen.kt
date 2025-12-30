@@ -1,6 +1,5 @@
 package com.myapp.greetingcard
 
-import android.R.attr.button
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,14 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 
 @Composable
 fun FlashCardList(
-    selectedItem: (FlashCard) -> Unit,
-
     flashCards: List<FlashCard>,
-
     onEditClicked: (FlashCard) -> Unit,
     onDeletedClicked: (FlashCard) -> Unit
 ) {
@@ -50,9 +47,11 @@ fun FlashCardList(
                     .fillMaxWidth()
                     .border(width = 1.dp, color = Color.LightGray)
                     .padding(6.dp)
+
                     .clickable(onClick = {
-                        selectedItem(flashCard)
+                        onEditClicked(flashCard)
                     }
+
                     )
             ) {
                 Column(modifier = Modifier.padding(6.dp))
@@ -60,12 +59,14 @@ fun FlashCardList(
                 Column(modifier = Modifier.padding(6.dp)) { Text(" = ") }
                 Column(modifier = Modifier.padding(6.dp))
                 { Text(flashCard.vietnameseCard.toString()) }
+
                 Button(
                     onClick = { onEditClicked(flashCard) },
                     modifier = Modifier.padding(start = 8.dp)
                 ){
                     Text("Edit")
                 }
+
                 Button(
                     onClick = { onDeletedClicked(flashCard) },
                     modifier = Modifier.padding(start = 8.dp)
@@ -80,22 +81,21 @@ fun FlashCardList(
 
 @Composable
 fun SearchCardsScreen(
-
-    selectedItem: (FlashCard) -> Unit,
     getAllFlashCards: suspend () -> List<FlashCard>,
     onEditSelected: (FlashCard) -> Unit,
     deleteCardById: suspend (Int) -> Unit,
-    onDeletedClicked: (FlashCard) -> Unit
     ) {
     var flashCards  by remember { mutableStateOf(emptyList<FlashCard>()) }
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
-        flashCards = getAllFlashCards()
-    }
+
     fun refreshFlashCards() {
         scope.launch {
             flashCards = getAllFlashCards()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        flashCards = getAllFlashCards()
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -104,10 +104,10 @@ fun SearchCardsScreen(
         Spacer(
             modifier = Modifier.size(16.dp)
         )
+        //page layout, not the content details
         FlashCardList(
             flashCards = flashCards,
-            onEditClicked = onEditSelected,     // Handle edit click
-            selectedItem = selectedItem,
+            onEditClicked = onEditSelected,
             onDeletedClicked = {
                 cardToDelete -> scope.launch{
                     deleteCardById(cardToDelete.uid)

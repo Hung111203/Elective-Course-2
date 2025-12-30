@@ -37,16 +37,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-                val appContext = applicationContext
                 val db = Room.databaseBuilder(
                     applicationContext,
                     AnNamDatabase::class.java, "An Nam database"
                 ).build()
                 val flashCardDao = db.flashCardDao()
-                //flashCardDao.insertAll(FlashCard(uid = 0, englishCard = "test1", vietnameseCard = "test2"))
-                //testing
                 runBlocking {
-
+// Now you can use the function you defined to get the DAO
                     val flashCard = flashCardDao.getAll()
                     Log.d("AnNam",flashCard.toString() )
 

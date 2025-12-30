@@ -13,13 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="homeStartDestination()">
+      <SelectionState runConfigName="backButtonAddCard()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="clickBackButtonAddCard()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="homeScreen_whenStudyCardButtonClicked_navigatesToStudyCardScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="displayMessage()">
+      <SelectionState runConfigName="changeMessage()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="homeScreen_addCardButtonExist()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
