@@ -47,21 +47,17 @@ class DaoTest {
         runBlocking {
             flashCardDao.insertAll(flashCard)
         }
-
+        //create item for comparison
         val item:FlashCard
         runBlocking {
             item = flashCardDao.findByCards("test_english", "test_vietnamese")
         }
-        assertEquals(flashCard.englishCard, item.englishCard, )
+        assertEquals(flashCard.englishCard, item.englishCard)
         assertEquals(flashCard.vietnameseCard, item.vietnameseCard)
     }
 
     @Test
     fun insertFlashCardUnSuccessful() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(
-            context, AnNamDatabase::class.java).build()
-        flashCardDao = db.flashCardDao()
 
         val flashCard =
             FlashCard(
@@ -83,4 +79,32 @@ class DaoTest {
         }
         assertEquals(true, error)
     }
+    /* Delete */
+    @Test
+    fun deleteExistingFlashCard(){
+        val flashCard =
+            FlashCard(
+                uid = 0,
+                englishCard = "test_english",
+                vietnameseCard = "test_vietnamese"
+            )
+
+
+        var flashCardsBefore: List<FlashCard>
+        runBlocking {
+            flashCardsBefore = flashCardDao.getAll()
+        }
+        runBlocking{
+            flashCardDao.insertAll(flashCard)
+            flashCardDao.deleteFlashCard("test_english",
+                vietnamese = "test_vietnamese")
+        }
+
+        var flashCardsAfter: List<FlashCard>
+        runBlocking {
+            flashCardsAfter = flashCardDao.getAll()
+        }
+        assertEquals(flashCardsBefore, flashCardsAfter)
+    }
+
 }

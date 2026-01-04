@@ -118,40 +118,39 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            startDestination = "home"
+            startDestination = HomeRoute
         ) {
             // HOME
-            composable(route = "home") {
+            composable<HomeRoute>{
                 HomeScreen(
                     navigator = navController,
                     changeMessage = { message = it }
                 )
             }
             // ADD CARD
-            composable(route = "add_card") {
+            composable<AddCardRoute>{
                 AddCardScreen(
                     changeMessage = { message = it },
                     insertFlashCard = insertFlashCard
                 )
             }
             // STUDY CARDS
-            composable(route = "study_cards") {
+            composable<StudyCardsRoute>{
                 StudyCardsScreen(
                     getLesson = getLesson,
                     networkService= networkService,
                     changeMessage = changeMessage
-                    )
-
+                )
             }
             // SEARCH CARDS
-            composable(route = "search_cards") {
+            composable<SearchCardsRoute>{
                 SearchCardsScreen(
                     getAllFlashCards = getAllFlashCards,
                     deleteCardById = deleteCardById,
                     onEditSelected = { flashCard ->
-                            navController.navigate(ShowCard(cardId = flashCard.uid))
-                        }
-                    )
+                        navController.navigate(ShowCard(cardId = flashCard.uid))
+                    }
+                )
             }
             composable<ShowCard> { backStackEntry ->
                 // This automatically gets the arguments from the navigation action.
@@ -164,8 +163,7 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                 )
             }
             composable <LoginRoute>{
-                backStackEntry ->
-                val loginRoute : LoginRoute = backStackEntry.toRoute()
+
                 LoginPage(
                     networkService= networkService,
                     changeMessage = changeMessage,

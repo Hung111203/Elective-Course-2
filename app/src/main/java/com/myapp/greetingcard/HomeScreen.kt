@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,14 +15,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.myapp.greetingcard.EMAIL
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -49,7 +46,7 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(onClick = {
-            navigator.navigate(route = "study_cards")
+            navigator.navigate(StudyCardsRoute)
             changeMessage("Study Cards...")
             Log.d("TEST", "Navigating to StudyWordsScreen...")
         }) { Text("Study Cards") }
@@ -57,7 +54,7 @@ fun HomeScreen(
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
-            navigator.navigate(route = "add_card")
+            navigator.navigate(AddCardRoute)
             changeMessage("Add Card...")
             Log.d("TEST", "Navigating to AddCardScreen...")
         }) { Text("Add Card") }
@@ -65,7 +62,7 @@ fun HomeScreen(
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
-            navigator.navigate("search_cards")
+            navigator.navigate(SearchCardsRoute)
         }) { Text("Search Card") }
         Spacer(Modifier.height(16.dp))
 

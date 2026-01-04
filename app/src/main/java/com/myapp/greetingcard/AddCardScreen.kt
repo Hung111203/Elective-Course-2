@@ -53,7 +53,7 @@ fun AddCardScreen(changeMessage: (String) -> Unit,
             value = vnWord,
 
             onValueChange = { vnWord = it },
-
+            modifier = Modifier.semantics{contentDescription = "Vietnamese String"},
             label = { Text(stringResource(id = R.string.Vietnamese_label)) }
 
         )

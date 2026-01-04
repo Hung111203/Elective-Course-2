@@ -1,12 +1,16 @@
 package com.myapp.greetingcard
 
+import androidx.compose.ui.test.DeviceConfigurationOverride
+import androidx.compose.ui.test.Locales
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.text.intl.LocaleList
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.room.Room
@@ -26,6 +30,7 @@ class MyComposeTest {
     @Test
     fun homeStartDestination() {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        //create fake android app context, so can run without a phone
         val navController = TestNavHostController(context)
 
         val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
@@ -59,7 +64,7 @@ class MyComposeTest {
         val navController = TestNavHostController(context)
 
         val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
-            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .allowMainThreadQueries()
             .build()
         val flashCardDao = db.flashCardDao()
 
@@ -80,9 +85,11 @@ class MyComposeTest {
             )
 
         }
-        composeTestRule.onNodeWithText("Add Card").performClick()
-        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Back").assertExists().performClick()
+        composeTestRule.onNodeWithText("Add Card").assertExists()
+                                                        .assertIsDisplayed()
+                                                        .performClick()
+        composeTestRule.onNodeWithText("Back").assertExists()
+                                                    .assertIsDisplayed().performClick()
 
 
     }
@@ -93,7 +100,7 @@ class MyComposeTest {
         val navController = TestNavHostController(context)
 
         val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
-            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .allowMainThreadQueries()
             .build()
         val flashCardDao = db.flashCardDao()
 
@@ -120,7 +127,7 @@ class MyComposeTest {
         val navController = TestNavHostController(context)
 
         val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
-            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .allowMainThreadQueries()
             .build()
         val flashCardDao = db.flashCardDao()
 
@@ -150,7 +157,7 @@ class MyComposeTest {
         val navController = TestNavHostController(context)
 
         val db = Room.inMemoryDatabaseBuilder(context, AnNamDatabase::class.java)
-            .allowMainThreadQueries() // Allow database operations on the main thread for simplicity in tests.
+            .allowMainThreadQueries()
             .build()
         val flashCardDao = db.flashCardDao()
 
@@ -169,6 +176,25 @@ class MyComposeTest {
 
 
 
+    }
+    @Test
+    fun viDisplayEmptyEnglish() {
+        // set the viet locale, and then test the label for eng field
+        //show in viet
+        composeTestRule.setContent {
+            DeviceConfigurationOverride(
+                DeviceConfigurationOverride.Locales(LocaleList("vi"))
+            ) {
+                AddCardScreen(
+                    changeMessage ={},
+                    insertFlashCard = {}
+
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithContentDescription("English String")
+            .assertTextEquals("Tiếng Anh", "")
     }
 
 }

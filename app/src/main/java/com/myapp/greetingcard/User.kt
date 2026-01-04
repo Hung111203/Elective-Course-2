@@ -42,6 +42,10 @@ interface FlashCardDao {
     @Delete
     suspend fun delete(flashCard: FlashCard)
 
+    @Query ("DELETE FROM FlashCards WHERE english_card = :english AND vietnamese_card = :vietnamese")
+    suspend fun deleteFlashCard(english: String, vietnamese: String)
+
+
     @Query("SELECT * FROM FlashCards WHERE uid = :id")
     suspend fun getCardById(id: Int): FlashCard?
 
