@@ -25,12 +25,13 @@ class DaoTest {
     fun setup() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
-            context, AnNamDatabase::class.java).build()
+            context, AnNamDatabase::class.java
+        ).build()
         flashCardDao = db.flashCardDao()
     }
 
     @After
-    fun close(){
+    fun close() {
         db.close()
     }
 
@@ -48,7 +49,7 @@ class DaoTest {
             flashCardDao.insertAll(flashCard)
         }
         //create item for comparison
-        val item:FlashCard
+        val item: FlashCard
         runBlocking {
             item = flashCardDao.findByCards("test_english", "test_vietnamese")
         }
@@ -73,15 +74,16 @@ class DaoTest {
         runBlocking {
             try {
                 flashCardDao.insertAll(flashCard)
-            } catch (e: SQLiteConstraintException){
+            } catch (e: SQLiteConstraintException) {
                 error = true
             }
         }
         assertEquals(true, error)
     }
+
     /* Delete */
     @Test
-    fun deleteExistingFlashCard(){
+    fun deleteExistingFlashCard() {
         val flashCard =
             FlashCard(
                 uid = 0,
@@ -94,17 +96,40 @@ class DaoTest {
         runBlocking {
             flashCardsBefore = flashCardDao.getAll()
         }
-        runBlocking{
-            flashCardDao.insertAll(flashCard)
-            flashCardDao.deleteFlashCard("test_english",
-                vietnamese = "test_vietnamese")
-        }
-
         var flashCardsAfter: List<FlashCard>
+
         runBlocking {
+            flashCardDao.insertAll(flashCard)
+            flashCardDao.deleteFlashCard(
+                "test_english",
+                vietnamese = "test_vietnamese"
+            )
             flashCardsAfter = flashCardDao.getAll()
         }
         assertEquals(flashCardsBefore, flashCardsAfter)
     }
+    @Test
+    fun deleteNonExistingFlashCard(){
+        val flashCard =
+            FlashCard(
+                uid = 0,
+                englishCard = "test_english",
+                vietnameseCard = "test_vietnamese"
+            )
+        val flashCardBefore : List<FlashCard>
+        runBlocking {
+            flashCardDao.insertAll(flashCard)
+            flashCardBefore = flashCardDao.getAll()
+        }
+        val flashCardAfter : List<FlashCard>
+        runBlocking {
+            flashCardDao.deleteFlashCard(
+                "test_english_1",
+                vietnamese = "test_vietnamese_1"
+            )
+            flashCardAfter = flashCardDao.getAll()
+        }
+        assertEquals(flashCardBefore,flashCardAfter)
 
+    }
 }

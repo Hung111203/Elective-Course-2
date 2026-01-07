@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     .build()
 
                 val networkService = retrofit.create(NetworkService::class.java)
-                //Navigator()
                 Navigator(navController, networkService, flashCardDao)
             }
         }

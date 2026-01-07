@@ -31,12 +31,19 @@ fun HomeScreen(
     changeMessage: (String) -> Unit
 ) {
     val context = LocalContext.current
+    //Activity Context -  tied directly to your MainActivity
+    // and knows everything about it, including what theme is being used
     val appContext = context.applicationContext
+    //read DataStore in a Compose screen
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         val preferencesFlow: Flow<Preferences> = appContext.dataStore.data
         val preferences = preferencesFlow.first()
         changeMessage(preferences[EMAIL] ?: "Welcome back!")
+        //3.Fetches the stored email if it exists.
+        // 4.Updates the bottom bar with a personalized
+        //welcome message (e.g., "john.doe@example.com")
+        //if the user is logged in, or a generic "Welcome back!" if they are not.
     }
 
     Column(
@@ -54,6 +61,7 @@ fun HomeScreen(
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
+            //navigator.navigate(route = "add_card")
             navigator.navigate(AddCardRoute)
             changeMessage("Add Card...")
             Log.d("TEST", "Navigating to AddCardScreen...")

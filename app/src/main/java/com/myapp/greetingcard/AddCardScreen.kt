@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,16 +31,13 @@ fun AddCardScreen(changeMessage: (String) -> Unit,
     LaunchedEffect(Unit) {
         changeMessage("Please, add a flash card.")
     }
-    Column() {
+    Column {
 
         TextField(
 
             value = enWord,
-
             onValueChange = { enWord = it },
-
             modifier = Modifier.semantics{contentDescription = "English String"},
-
             label = { Text(stringResource(id = R.string.English_label))
             }
 
@@ -51,7 +47,6 @@ fun AddCardScreen(changeMessage: (String) -> Unit,
         TextField(
 
             value = vnWord,
-
             onValueChange = { vnWord = it },
             modifier = Modifier.semantics{contentDescription = "Vietnamese String"},
             label = { Text(stringResource(id = R.string.Vietnamese_label)) }
@@ -61,7 +56,6 @@ fun AddCardScreen(changeMessage: (String) -> Unit,
         Button(
             modifier = Modifier.semantics { contentDescription = "Add" },
             onClick = {
-                //insertFlashCard(FlashCard(uid = 0, englishCard = enWord, vietnameseCard = vnWord))
                 scope.launch {
                     try {
                         insertFlashCard(

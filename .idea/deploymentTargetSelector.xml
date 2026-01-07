@@ -13,10 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="clickBackButtonAddCard()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="viDisplayEmptyEnglish()">
+      <SelectionState runConfigName="homeScreen_whenStudyCardButtonClicked_navigatesToStudyCardScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

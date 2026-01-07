@@ -127,6 +127,10 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                     changeMessage = { message = it }
                 )
             }
+         // ADD CARD using composable
+//            composable(route = "add_card") {
+//            AddCardScreen(...)
+//            }
             // ADD CARD
             composable<AddCardRoute>{
                 AddCardScreen(
@@ -163,7 +167,6 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                 )
             }
             composable <LoginRoute>{
-
                 LoginPage(
                     networkService= networkService,
                     changeMessage = changeMessage,

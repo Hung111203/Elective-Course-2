@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.intl.LocaleList
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
+import androidx.navigation.toRoute
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertEquals
@@ -55,7 +56,10 @@ class MyComposeTest {
                 flashCardDao
             )
         }
-        assertEquals("home", navController.currentDestination?.route)
+        //before using type-safe assertEquals("home", navController.currentDestination?.route)
+
+        assertEquals("com.myapp.greetingcard.HomeRoute"
+            , navController.currentBackStackEntry?.destination?.route)
     }
 
     @Test
@@ -90,7 +94,9 @@ class MyComposeTest {
                                                         .performClick()
         composeTestRule.onNodeWithText("Back").assertExists()
                                                     .assertIsDisplayed().performClick()
-
+        //assertEquals("home", navController.currentDestination?.route)
+        assertEquals("com.myapp.greetingcard.HomeRoute", navController.currentBackStackEntry?.destination?.route)
+        //purpose: cannot compare the object with the string
 
     }
 
@@ -116,10 +122,12 @@ class MyComposeTest {
         composeTestRule.setContent {
             Navigator(navController, networkService, flashCardDao)
         }
-        composeTestRule.onNodeWithText("Study Cards").assertExists().assertIsDisplayed()
-        composeTestRule.onNodeWithText("Study Cards").performClick()
-        assertEquals("study_cards", navController.currentDestination?.route)
-
+        composeTestRule.onNodeWithText("Study Cards").assertExists()
+                                                        .assertIsDisplayed()
+                                                        .performClick()
+        //assertEquals("study_cards", navController.currentDestination?.route)
+        assertEquals("com.myapp.greetingcard.StudyCardsRoute"
+            , navController.currentBackStackEntry?.destination?.route)
     }
     @Test
     fun changeMessage(){

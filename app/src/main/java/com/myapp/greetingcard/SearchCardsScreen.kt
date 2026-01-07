@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 
 @Composable
+//the content of the list itself
 fun FlashCardList(
     flashCards: List<FlashCard>,
     onEditClicked: (FlashCard) -> Unit,
