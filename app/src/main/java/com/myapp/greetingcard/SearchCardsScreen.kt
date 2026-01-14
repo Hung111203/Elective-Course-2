@@ -82,22 +82,21 @@ fun FlashCardList(
 
 @Composable
 fun SearchCardsScreen(
-    getAllFlashCards: suspend () -> List<FlashCard>,
+    args: SearchCardsRoute,
     onEditSelected: (FlashCard) -> Unit,
     deleteCardById: suspend (Int) -> Unit,
+    getFilteredFlashCards: suspend (en: String, exactEn: Boolean, vn: String, exactVn: Boolean) -> List<FlashCard>
     ) {
     var flashCards  by remember { mutableStateOf(emptyList<FlashCard>()) }
     val scope = rememberCoroutineScope()
 
     fun refreshFlashCards() {
         scope.launch {
-            flashCards = getAllFlashCards()
-        }
+            flashCards = getFilteredFlashCards(args.en, args.searchByEnglish, args.vn, args.searchByVietnamese)        }
     }
 
     LaunchedEffect(Unit) {
-        flashCards = getAllFlashCards()
-    }
+        flashCards = getFilteredFlashCards(args.en, args.searchByEnglish, args.vn, args.searchByVietnamese)    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),

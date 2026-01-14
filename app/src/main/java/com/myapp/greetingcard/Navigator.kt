@@ -67,6 +67,14 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
     val findByCards: suspend (String, String) -> FlashCard? = { en, vn ->
         flashCardDao.findByCards(en, vn)
     }
+    val getFilteredFlashCards: suspend (
+        en: String,
+        exactEn: Boolean,
+        vn: String,
+        exactVn: Boolean
+    ) -> List<FlashCard> = { en, exactEn, vn, exactVn ->
+        flashCardDao.getFilteredFlashCards(en, exactEn, vn, exactVn)
+    }
 
 
     Scaffold(
@@ -87,7 +95,7 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                 navigationIcon = {
                     val currentRoute =
                         navController.currentBackStackEntryAsState().value?.destination?.route
-                    if (currentRoute != "home") {
+                    if (currentRoute != HomeRoute::class.qualifiedName) {
                         Button(
 
                             onClick = {
@@ -152,12 +160,16 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
             }
             // SEARCH CARDS
             composable<SearchCardsRoute>{
+                backStackEntry ->
+                    val args: SearchCardsRoute = backStackEntry.toRoute()
                 SearchCardsScreen(
-                    getAllFlashCards = getAllFlashCards,
+                    args = args,
                     deleteCardById = deleteCardById,
                     onEditSelected = { flashCard ->
                         navController.navigate(ShowCard(cardId = flashCard.uid))
-                    }
+                    },
+                    getFilteredFlashCards = getFilteredFlashCards
+
                 )
             }
             composable<ShowCard> { backStackEntry ->
@@ -185,7 +197,12 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                     navigateToHome = navigateToHome,
                     email = tokenRoute.email
                 )
-
+            }
+            composable<SearchScreenRoute> {
+                SearchScreen(
+                    navigator = navController,
+                    changeMessage = changeMessage
+                )
             }
 
 

@@ -21,8 +21,18 @@ object AddCardRoute
 object StudyCardsRoute
 
 @Serializable
-object SearchCardsRoute
+data class SearchCardsRoute(
+    val en: String,
+    val vn: String,
+    val searchByEnglish: Boolean,
+    val searchByVietnamese: Boolean
+)
+@Serializable
+object SearchScreenRoute
+
 @Serializable
 data class TokenRoute(
     val email: String
 )
+
+

@@ -70,7 +70,7 @@ fun HomeScreen(
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
-            navigator.navigate(SearchCardsRoute)
+            navigator.navigate(SearchScreenRoute)
         }) { Text("Search Card") }
         Spacer(Modifier.height(16.dp))
 

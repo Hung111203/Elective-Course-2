@@ -43,4 +43,13 @@ interface FlashCardDao {
 
     @Query("SELECT * FROM FlashCards ORDER BY RANDOM() LIMIT :size")
     suspend fun getLesson(size: Int): List<FlashCard>
+    @Query(
+        "SELECT * FROM FlashCards WHERE " +
+                "(CASE WHEN :exactEn THEN english_card LIKE :en  " +
+                "WHEN NOT :exactEn  THEN english_card LIKE '%' || :en || '%' END) " +
+                "AND " +
+                "(CASE WHEN :exactVn THEN vietnamese_card LIKE :vn " +
+                "WHEN NOT :exactVn THEN vietnamese_card LIKE '%' || :vn || '%' END)"
+    )
+    suspend fun getFilteredFlashCards(en: String, exactEn: Boolean, vn: String, exactVn: Boolean): List<FlashCard>
 }
