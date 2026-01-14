@@ -2,7 +2,6 @@ package com.myapp.greetingcard
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,7 +10,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
-import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -42,12 +40,7 @@ class MainActivity : ComponentActivity() {
                     AnNamDatabase::class.java, "An Nam database"
                 ).build()
                 val flashCardDao = db.flashCardDao()
-                runBlocking {
-// Now you can use the function you defined to get the DAO
-                    val flashCard = flashCardDao.getAll()
-                    Log.d("AnNam",flashCard.toString() )
 
-                }
                 val retrofit: Retrofit = Retrofit.Builder()
                     .baseUrl("https://placeholder.com")
                     .addConverterFactory(GsonConverterFactory.create())

@@ -21,7 +21,7 @@ interface FlashCardDao {
 
     @Query("SELECT * FROM FlashCards WHERE english_card LIKE :english AND " +
             "vietnamese_card LIKE :vietnamese LIMIT 1")
-    suspend fun findByCards(english: String, vietnamese: String): FlashCard
+    suspend fun findByCards(english: String, vietnamese: String): FlashCard?
 
     @Insert
     suspend fun insertAll(vararg flashCard: FlashCard)

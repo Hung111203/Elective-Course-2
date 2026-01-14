@@ -25,7 +25,8 @@ fun ShowCardScreen(
     args: ShowCard,
     getCardById: suspend (Int) -> FlashCard?,
     updateCard: suspend (FlashCard) -> Unit,
-    changeMessage: (String) -> Unit
+    changeMessage: (String) -> Unit,
+    findByCards: suspend (String, String) -> FlashCard?
 ) {
     var enWord by rememberSaveable { mutableStateOf("") }
     var vnWord by rememberSaveable { mutableStateOf("") }
@@ -47,7 +48,7 @@ fun ShowCardScreen(
         isLoading = false
     }
 
-    Column() {
+    Column {
         if (isLoading) {
             CircularProgressIndicator()
         } else if (cardFound) {
@@ -63,32 +64,37 @@ fun ShowCardScreen(
 
              TextField(
                     value = vnWord,
-                    onValueChange = { vnWord = it }, // Link to state variable
+                    onValueChange = { vnWord = it },
                     modifier = Modifier
                         .fillMaxWidth()
                         .semantics { contentDescription = "Vietnamese String" },
                     label = { Text(stringResource(id = R.string.Vietnamese_label)) }
                 )
 
-                Button(
-                    onClick = {
-                        scope.launch {
-                            // Create an updated FlashCard object and save it
+            Button(
+                onClick = {
+                    scope.launch {
+                        val existingCard = findByCards(enWord, vnWord)
+                        if (existingCard != null && existingCard.uid != args.cardId) {
+                            changeMessage("A card with these words already exists.")
+                        } else {
                             val updatedFlashCard = FlashCard(
                                 uid = args.cardId,
                                 englishCard = enWord,
                                 vietnameseCard = vnWord
                             )
                             updateCard(updatedFlashCard)
-                            changeMessage("Card updated successfully.");
+                            changeMessage("Card updated successfully.")
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Save Changes")
-                }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Save Changes")
+            }
 
-            } else {
+
+        } else {
                 Text("Card not found.")
             }
         }

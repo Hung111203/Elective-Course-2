@@ -59,11 +59,15 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
         flashCardDao.getLesson(size)
     }
     val navigateToHome = fun(){
-        navController.navigate("home")
+        navController.navigate(HomeRoute)
     }
     val navigateToToken = fun(email:String){
         navController.navigate(TokenRoute(email))
     }
+    val findByCards: suspend (String, String) -> FlashCard? = { en, vn ->
+        flashCardDao.findByCards(en, vn)
+    }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -157,13 +161,13 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                 )
             }
             composable<ShowCard> { backStackEntry ->
-                // This automatically gets the arguments from the navigation action.
                 val args: ShowCard = backStackEntry.toRoute()
                 ShowCardScreen(
                     args = args,
                     getCardById = getCardById,
                     updateCard = updateCard,
-                    changeMessage = changeMessage
+                    changeMessage = changeMessage,
+                    findByCards = findByCards
                 )
             }
             composable <LoginRoute>{

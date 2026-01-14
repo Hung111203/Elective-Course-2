@@ -31,7 +31,7 @@ fun HomeScreen(
     changeMessage: (String) -> Unit
 ) {
     val context = LocalContext.current
-    //Activity Context -  tied directly to your MainActivity
+    //Activity Context -  tied directly to  MainActivity
     // and knows everything about it, including what theme is being used
     val appContext = context.applicationContext
     //read DataStore in a Compose screen
@@ -40,8 +40,8 @@ fun HomeScreen(
         val preferencesFlow: Flow<Preferences> = appContext.dataStore.data
         val preferences = preferencesFlow.first()
         changeMessage(preferences[EMAIL] ?: "Welcome back!")
-        //3.Fetches the stored email if it exists.
-        // 4.Updates the bottom bar with a personalized
+        //Fetches the stored email if it exists.
+        // Updates the bottom bar with a personalized
         //welcome message (e.g., "john.doe@example.com")
         //if the user is logged in, or a generic "Welcome back!" if they are not.
     }
