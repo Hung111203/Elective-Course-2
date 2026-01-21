@@ -3,5 +3,6 @@
     <string name="English_label">English</string>
     <string name="Vietnamese_label">Vietnamese</string>
     <string name="add_study_cards">Add Study Cards</string>
+    <string name="audio_label">Audio</string>
 
 </resources>

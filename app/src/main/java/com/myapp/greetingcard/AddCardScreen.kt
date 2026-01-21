@@ -1,5 +1,4 @@
 package com.myapp.greetingcard
-
 import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
@@ -17,9 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import kotlinx.coroutines.launch
-
 @Composable
-
 fun AddCardScreen(changeMessage: (String) -> Unit,
                   insertFlashCard: suspend (FlashCard) -> Unit) {
 
@@ -32,27 +29,19 @@ fun AddCardScreen(changeMessage: (String) -> Unit,
         changeMessage("Please, add a flash card.")
     }
     Column {
-
         TextField(
-
             value = enWord,
             onValueChange = { enWord = it },
             modifier = Modifier.semantics{contentDescription = "English String"},
             label = { Text(stringResource(id = R.string.English_label))
             }
-
-
         )
-
         TextField(
-
             value = vnWord,
             onValueChange = { vnWord = it },
             modifier = Modifier.semantics{contentDescription = "Vietnamese String"},
             label = { Text(stringResource(id = R.string.Vietnamese_label)) }
-
         )
-
         Button(
             modifier = Modifier.semantics { contentDescription = "Add" },
             onClick = {
@@ -76,11 +65,7 @@ fun AddCardScreen(changeMessage: (String) -> Unit,
                 }
             }
         ) {
-
             Text("Add")
-
         }
-
     }
-
 }

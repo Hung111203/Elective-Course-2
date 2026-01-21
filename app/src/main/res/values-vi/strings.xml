@@ -3,5 +3,5 @@
     <string name="English_label">Tiếng Anh</string>
     <string name="Vietnamese_label">Tiếng Việt</string>
     <string name="add_study_cards">Thêm thẻ nhé</string>
-
+    <string name="audio_label">Âm thanh</string>
 </resources>

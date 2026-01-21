@@ -24,9 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-
 @Composable
 //the content of the list itself
 fun FlashCardList(
@@ -79,9 +77,8 @@ fun FlashCardList(
     }
 }
 
-
 @Composable
-fun SearchCardsScreen(
+fun ListOfCardScreen(
     args: SearchCardsRoute,
     onEditSelected: (FlashCard) -> Unit,
     deleteCardById: suspend (Int) -> Unit,

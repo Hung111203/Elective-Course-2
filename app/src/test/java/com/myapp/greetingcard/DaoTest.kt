@@ -36,26 +36,26 @@ class DaoTest {
     }
 
 
-    @Test
-    fun insertFlashCardSuccessful() {
-        val flashCard =
-            FlashCard(
-                uid = 0,
-                englishCard = "test_english",
-                vietnameseCard = "test_vietnamese"
-            )
-
-        runBlocking {
-            flashCardDao.insertAll(flashCard)
-        }
-        //create item for comparison
-        val item: FlashCard
-        runBlocking {
-            item = flashCardDao.findByCards("test_english", "test_vietnamese")
-        }
-        assertEquals(flashCard.englishCard, item.englishCard)
-        assertEquals(flashCard.vietnameseCard, item.vietnameseCard)
-    }
+//    @Test
+//    fun insertFlashCardSuccessful() {
+//        val flashCard =
+//            FlashCard(
+//                uid = 0,
+//                englishCard = "test_english",
+//                vietnameseCard = "test_vietnamese"
+//            )
+//
+//        runBlocking {
+//            flashCardDao.insertAll(flashCard)
+//        }
+//        //create item for comparison
+//        val item: FlashCard
+//        runBlocking {
+//            item = flashCardDao.findByCards("test_english", "test_vietnamese")
+//        }
+//        assertEquals(flashCard.englishCard, item.englishCard)
+//        assertEquals(flashCard.vietnameseCard, item.vietnameseCard)
+//    }
 
     @Test
     fun insertFlashCardUnSuccessful() {

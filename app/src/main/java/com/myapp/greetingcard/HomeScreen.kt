@@ -24,7 +24,6 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
 @Composable
 fun HomeScreen(
     navigator: NavHostController,
@@ -59,7 +58,6 @@ fun HomeScreen(
         }) { Text("Study Cards") }
 
         Spacer(Modifier.height(16.dp))
-
         Button(onClick = {
             //navigator.navigate(route = "add_card")
             navigator.navigate(AddCardRoute)
@@ -88,18 +86,13 @@ fun HomeScreen(
                         preferences.remove(EMAIL)
                         preferences.remove(TOKEN)
                         changeMessage(preferences[EMAIL] ?: "")
-
                     }
-
                 }
-
             }) {
             Text(
                 "Log out",
                 modifier = Modifier.semantics { contentDescription = "Logout" }
             )
         }
-
-
     }
 }

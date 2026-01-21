@@ -1,11 +1,8 @@
 package com.myapp.greetingcard
-
 import kotlinx.serialization.Serializable
-
 //type-safe navigation route.
-
 @Serializable
-data class ShowCard(
+data class EditCard(
     val cardId: Int
 )
 @Serializable

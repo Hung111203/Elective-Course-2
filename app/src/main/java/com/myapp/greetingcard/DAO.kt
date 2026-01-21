@@ -1,7 +1,6 @@
 package com.myapp.greetingcard
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RawQuery
@@ -12,35 +11,22 @@ import androidx.sqlite.db.SupportSQLiteQuery
 interface FlashCardDao {
     @RawQuery
     fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
-
     @Query("SELECT * FROM FlashCards")
     suspend fun getAll(): List<FlashCard>
-
-    @Query("SELECT * FROM FlashCards WHERE uid IN (:flashCardIds)")
-    suspend fun loadAllByIds(flashCardIds: IntArray): List<FlashCard>
-
     @Query("SELECT * FROM FlashCards WHERE english_card LIKE :english AND " +
             "vietnamese_card LIKE :vietnamese LIMIT 1")
     suspend fun findByCards(english: String, vietnamese: String): FlashCard?
-
     @Insert
     suspend fun insertAll(vararg flashCard: FlashCard)
-
-    @Delete
-    suspend fun delete(flashCard: FlashCard)
-
     @Query ("DELETE FROM FlashCards WHERE english_card = :english AND vietnamese_card = :vietnamese")
     suspend fun deleteFlashCard(english: String, vietnamese: String)
 
-
     @Query("SELECT * FROM FlashCards WHERE uid = :id")
     suspend fun getCardById(id: Int): FlashCard?
-
     @Query("DELETE FROM FlashCards WHERE uid = :id")
     suspend fun deleteById(id: Int)
     @Update
     suspend fun updateCard(flashCard: FlashCard)
-
     @Query("SELECT * FROM FlashCards ORDER BY RANDOM() LIMIT :size")
     suspend fun getLesson(size: Int): List<FlashCard>
     @Query(
@@ -53,3 +39,5 @@ interface FlashCardDao {
     )
     suspend fun getFilteredFlashCards(en: String, exactEn: Boolean, vn: String, exactVn: Boolean): List<FlashCard>
 }
+
+

@@ -41,7 +41,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.security.MessageDigest
 
-private fun saveAudioToInternalStorage(context: Context, audioData: ByteArray, filename: String) {
+ fun saveAudioToInternalStorage(context: Context, audioData: ByteArray, filename: String) {
     val file = File(context.filesDir, filename)
     FileOutputStream(file).use { fos ->
         fos.write(audioData)
@@ -57,15 +57,12 @@ fun hashStringSHA256(input: String): String {
     }
 
 }
-
 @Composable
 fun StudyCardsScreen(
     getLesson: suspend (Int) -> List<FlashCard>,
     networkService: NetworkService,
     changeMessage: (String) -> Unit
 ) {
-
-
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val appContext = context.applicationContext
@@ -76,7 +73,7 @@ fun StudyCardsScreen(
     var token by remember { mutableStateOf("") }
     val size  = 3
     var flashCard by remember { mutableStateOf<FlashCard?>(null) }
-    // FIX: Using simple `remember` is better here since we re-check file existence every time.
+    // Using simple `remember` is better here since we re-check file existence every time.
     var audioFile by remember { mutableStateOf("") }
 
 
@@ -88,7 +85,6 @@ fun StudyCardsScreen(
         token = preferences[TOKEN] ?: ""
 
         lesson = getLesson(size)
-        // FIX 1: The logic was inverted. This should be `isNotEmpty`.
         if (lesson.isNotEmpty()) {
             lesson = lesson.shuffled()
             currentCardIndex = 0;
@@ -97,8 +93,6 @@ fun StudyCardsScreen(
             changeMessage("The database is empty.")
         }
     }
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +100,6 @@ fun StudyCardsScreen(
         contentAlignment = Alignment.TopCenter
     ) {
         if (flashCard != null) {
-            // FIX 2: Wrapped UI elements in a Column for proper vertical layout.
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -141,7 +134,6 @@ fun StudyCardsScreen(
                 if (file.exists()) {
                     audioFile = fileName
                 } else {
-                    // ADDED: Reset audioFile if the file for the current card doesn't exist.
                     audioFile = ""
                 }
                 Button(

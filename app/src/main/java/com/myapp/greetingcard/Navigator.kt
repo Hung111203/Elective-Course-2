@@ -162,24 +162,25 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
             composable<SearchCardsRoute>{
                 backStackEntry ->
                     val args: SearchCardsRoute = backStackEntry.toRoute()
-                SearchCardsScreen(
+                ListOfCardScreen(
                     args = args,
                     deleteCardById = deleteCardById,
                     onEditSelected = { flashCard ->
-                        navController.navigate(ShowCard(cardId = flashCard.uid))
+                        navController.navigate(EditCard(cardId = flashCard.uid))
                     },
                     getFilteredFlashCards = getFilteredFlashCards
 
                 )
             }
-            composable<ShowCard> { backStackEntry ->
-                val args: ShowCard = backStackEntry.toRoute()
-                ShowCardScreen(
+            composable<EditCard> { backStackEntry ->
+                val args: EditCard = backStackEntry.toRoute()
+                EditCardScreen(
                     args = args,
                     getCardById = getCardById,
                     updateCard = updateCard,
                     changeMessage = changeMessage,
-                    findByCards = findByCards
+                    findByCards =  findByCards,
+                    networkService = networkService
                 )
             }
             composable <LoginRoute>{
@@ -204,8 +205,6 @@ fun Navigator(navController: NavHostController,networkService: NetworkService,fl
                     changeMessage = changeMessage
                 )
             }
-
-
         }
     }
 }
